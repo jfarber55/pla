@@ -1986,13 +1986,17 @@ if(isset($_GET['action']) && !isset($_GET['confirm']))
 			echo "<fieldset>";
 			echo "<legend><b>".sprintf($lang['run_sql'],htmlencode($db->getName()))."</b></legend>";
 			echo $params->getForm(array('action'=>'table_sql'));
-			if(isset($_SESSION[COOKIENAME.'query_history']) && sizeof($_SESSION[COOKIENAME.'query_history'])>0)
+
+			/* 
+			 * I put this almost at the end of the file because I prefer to see the history queries after.
+			 */
+			/* if(isset($_SESSION[COOKIENAME.'query_history']) && sizeof($_SESSION[COOKIENAME.'query_history'])>0)
 			{
 				echo "<b>".$lang['recent_queries']."</b><ul>";
 				foreach($_SESSION[COOKIENAME.'query_history'] as $key => $value)
 					echo "<li><a onclick='sqleditorSetValue(this.textContent); return false;' href='#'>".htmlencode($value)."</a></li>";
 				echo "</ul><br/><br/>";
-			}
+			} */
 			echo "<div style='float:left; width:70%;'>";
 			echo "<textarea style='width:97%; height:300px;' name='queryval' id='queryval' cols='50' rows='8'>".htmlencode($queryStr)."</textarea>";
 			echo "<script>sqleditor(document.getElementById('queryval'),".json_encode($db->getTableDefinitions()).",'".htmlencode($target_table)."');</script>";
@@ -3858,6 +3862,19 @@ if(!$target_table && !isset($_GET['confirm']) && (!isset($_GET['action']) || (is
 	}
 
 	echo "</div>";
+}
+echo "</div>";
+
+// This is for show all query history at the bottom of the view, not at the begining.
+if(isset($_GET['action']) && !isset($_GET['confirm']) && $_GET['action'] == "	")
+{
+	if(isset($_SESSION[COOKIENAME.'query_history']) && sizeof($_SESSION[COOKIENAME.'query_history'])>0)
+	{
+		echo "<b>".$lang['recent_queries']."</b><ul>";
+		foreach($_SESSION[COOKIENAME.'query_history'] as $key => $value)
+			echo "<li><a onclick='sqleditorSetValue(this.textContent); return false;' href='#'>".htmlencode($value)."</a></li>";
+		echo "</ul><br/><br/>";
+	}
 }
 echo "</div>";
 
